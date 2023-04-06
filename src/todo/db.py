@@ -4,6 +4,14 @@ class BasicDB:
         self._fileopener = _fileopener
 
     def load(self):
-        with self._fileopener(self._path, "r", encoding="utf-8") as f:
-            txt = f.read()
-        return eval(txt)
+        try:
+            with self._fileopener(self._path, "r", encoding="utf-8") as f:
+                txt = f.read()
+            return eval(txt)
+        except FileNotFoundError:
+            return []
+        
+    def save(self, values):
+        with self._fileopener(self._path, "w+", encoding="utf-8") as f:
+            f.write(repr(values).replace("'",'"'))
+
