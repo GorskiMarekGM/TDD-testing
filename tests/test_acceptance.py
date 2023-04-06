@@ -93,8 +93,7 @@ class TestTODOAcceptance(unittest.TestCase):
                     break
             app_thread = threading.Thread(
                 target=TODOApp(
-                io=(self.fake_input, self.fake_output),
-                dbpath=tmpdirname
+                io=(self.fake_input, self.fake_output)
                 ).run,
                 daemon=True
             )
@@ -103,10 +102,10 @@ class TestTODOAcceptance(unittest.TestCase):
             welcome = self.get_output()
             self.assertEqual(
                 welcome, (
-            "Lista rzeczy do zrobienia:\n"
-            "1. kupic mleko\n"
-            "\n"
-            "> "
+                "Lista rzeczy do zrobienia:\n"
+                "1. kupic mleko\n"
+                "\n"
+                "> "
                 )
             )
             self.send_input("quit")

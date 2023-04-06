@@ -20,3 +20,19 @@ class TestBasicDB(unittest.TestCase):
         mock_opener = mock.Mock(side_effect=FileNotFoundError)
         db = BasicDB(pathlib.Path("testdb"), _fileopener= mock_opener)
         loaded = db.load()
+
+        self.assertEqual(loaded,[])
+        self.assertEqual(mock_opener.call_args[0][0],
+                         pathlib.Path("testdb")
+                        )
+
+    def test_save(self):
+        mock_file = mock.MagicMock(write=mock.Mock())
+        mock_file.__enter__.return_value = mock_file
+        mock_opener = mock.Mock(return_value=mock_file)
+        db = BasicDB(pathlib.Path("testdb"), _fileopener=mock_opener)
+        loaded = db.save(["first","second"])
+        self.assertEqual(mock_opener.call_args[0][0:2],
+                         (pathlib.Path("testdb"), "w+")
+                         )
+        mock_file.write.assert_called_with('["first", "second"]')
