@@ -1,0 +1,51 @@
+import functools
+
+class TODOApp:
+    def __init__(self, io=(input, functools.partial(print, end="")), dbmanager=None):
+        self._in, self._out = io
+        self._quit = False
+        self._entries = []
+        self._dbmanager = dbmanager
+
+    def run(self):
+        if self._dbmanager is not None:
+            self._entries = self._dbmanager.load()
+        while not self._quit:
+            self._out(self.prompt(self.items_list()))
+            command = self._in()
+            self._dispatch(command)
+        self._out("Żegnaj!\n")
+
+    def prompt(self, output):
+        return f"Lista rzeczy do zrobienia:\n{output}\n\n> "
+    
+    def cmd_quit(self, *_):
+        self._quit = True
+
+    def cmd_add(self, what):
+        self._entries.append(what)
+    
+    def cmd_del(self, idx):
+        idx = int(idx) - 1
+        if idx < 0 or idx >= len(self._entries):
+            self._out("Nieprawidłowy indeks\n")
+            return
+        self._entries.pop(idx)
+
+    def items_list(self):
+        enumerated_items = enumerate(self._entries, start=1)
+        return "\n".join("{}. {}".format(idx, entry) for idx, entry in enumerated_items
+                         )
+
+    def _dispatch(self, cmd):
+        cmd, *args = cmd.split(" ",1)
+        executor = getattr(self,"cmd_{}".format(cmd),None)
+        if executor is None:
+            self._out("Nieprawidłowe polecenie: {}\n".format(cmd))
+            return
+        executor(*args)
+
+
+
+
+
