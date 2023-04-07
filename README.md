@@ -11,6 +11,10 @@ Close app
 ```
 quit
 ```
+Run all tests
+```
+python -m unittest discover -v   
+```
 
 Run unit tests
 
