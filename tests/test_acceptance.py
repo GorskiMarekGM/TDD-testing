@@ -65,10 +65,12 @@ class TestTODOAcceptance(unittest.TestCase):
 
     def test_persistence(self):
         with tempfile.TemporaryDirectory() as tmpdirname:
+            db = BasicDB(pathlib.Path(tmpdirname, "db"))
+
             app_thread = threading.Thread(
                 target=TODOApp(
                 io=(self.fake_input, self.fake_output),
-                dbmanager=BasicDB(pathlib.Path(tmpdirname, "db"))
+                dbmanager=db
                 ).run,
                 daemon=True
             )
@@ -91,23 +93,19 @@ class TestTODOAcceptance(unittest.TestCase):
                     self.get_output()
                 except queue.Empty:
                     break
+                
             app_thread = threading.Thread(
                 target=TODOApp(
-                io=(self.fake_input, self.fake_output)
+                io=(self.fake_input, self.fake_output),
+                dbmanager=db
                 ).run,
                 daemon=True
             )
             app_thread.start()
 
             welcome = self.get_output()
-            self.assertEqual(
-                welcome, (
-                "Lista rzeczy do zrobienia:\n"
-                "1. kupic mleko\n"
-                "\n"
-                "> "
-                )
-            )
+            expected_output = 'Lista rzeczy do zrobienia:\n1. kupić mleko\n\n> '
+            self.assertEqual(welcome, expected_output)
             self.send_input("quit")
             app_thread.join(timeout=1)
 
