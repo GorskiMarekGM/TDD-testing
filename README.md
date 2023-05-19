@@ -1,5 +1,5 @@
 ## Description
-This is a command-line application that uses a programming approach called Test-Driven Development (TDD). The tests cover different types of testing, such as acceptance testing, unit testing, and regression testing. 
+This is a TO-DO command-line application that uses a programming approach called Test-Driven Development (TDD). The tests cover different types of testing, such as acceptance testing, unit testing, and regression testing. 
 
 The app saves data in the memory, so it is not lost even if you close the app. Additionally, I have created my own instance of a database using a JSON file. This helps to store data in a structured way, making it easy to retrieve and manage later.
 
